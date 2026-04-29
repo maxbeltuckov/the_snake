@@ -53,7 +53,7 @@ class GameObject:
 
 
 class Apple(GameObject):
-    """Класс яблока. Появляется в случайном месте поля, не занятом змейкой."""
+    """Класс яблока. Появляется в случайном месте поля."""
 
     def __init__(self, snake_positions=None):
         """
@@ -83,7 +83,9 @@ class Apple(GameObject):
 
     def draw(self, surface):
         """Отрисовывает яблоко на игровой поверхности."""
-        rect = pygame.Rect(self.position[0], self.position[1], GRID_SIZE, GRID_SIZE)
+        rect = pygame.Rect(
+            self.position[0], self.position[1], GRID_SIZE, GRID_SIZE
+        )
         pygame.draw.rect(surface, self.body_color, rect)
         pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
@@ -104,7 +106,7 @@ class Snake(GameObject):
         """
         Возвращает позицию головы змейки.
 
-        Returns:
+        Возвращает:
             tuple: Координаты (x, y) головы змейки.
         """
         return self.positions[0]
@@ -112,8 +114,9 @@ class Snake(GameObject):
     def update_direction(self):
         """Обновляет направление движения после нажатия клавиши."""
         if self.next_direction:
-            if (self.next_direction[0] != -self.direction[0] or
-                self.next_direction[1] != -self.direction[1]):
+            next_dx, next_dy = self.next_direction
+            dx, dy = self.direction
+            if next_dx != -dx or next_dy != -dy:
                 self.direction = self.next_direction
             self.next_direction = None
 
@@ -133,7 +136,10 @@ class Snake(GameObject):
             return
 
         self.positions.insert(0, new_head)
-        self.last = self.positions.pop() if len(self.positions) > self.length else None
+        if len(self.positions) > self.length:
+            self.last = self.positions.pop()
+        else:
+            self.last = None
 
     def grow(self):
         """Увеличивает длину змейки при съедании яблока."""
@@ -160,11 +166,15 @@ class Snake(GameObject):
             surface: Поверхность pygame для рисования.
         """
         if self.last:
-            last_rect = pygame.Rect(self.last[0], self.last[1], GRID_SIZE, GRID_SIZE)
+            last_rect = pygame.Rect(
+                self.last[0], self.last[1], GRID_SIZE, GRID_SIZE
+            )
             pygame.draw.rect(surface, BOARD_BACKGROUND_COLOR, last_rect)
 
         for position in self.positions:
-            rect = pygame.Rect(position[0], position[1], GRID_SIZE, GRID_SIZE)
+            rect = pygame.Rect(
+                position[0], position[1], GRID_SIZE, GRID_SIZE
+            )
             pygame.draw.rect(surface, self.body_color, rect)
             pygame.draw.rect(surface, BORDER_COLOR, rect, 1)
 
