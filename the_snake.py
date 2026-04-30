@@ -113,7 +113,7 @@ class Snake(GameObject):
         return self.positions[0]
 
     def update_direction(self):
-        """Обновляет направление движения после нажатия клавиши."""
+        """Обновляет направление движения змейки после нажатия клавиши."""
         if self.next_direction:
             next_dx, next_dy = self.next_direction
             dx, dy = self.direction
